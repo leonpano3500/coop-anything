@@ -1954,6 +1954,42 @@ or input simulation occurred. Stage gates unchanged: Stage 2 `BUILD_ONLY`,
 Stage 3 `PREP_ONLY`, full test closed, `GATE_C=CLOSED`, QA `none`, no co-op
 claim, no ETA.
 
+## mpdev192 pointer-reference context for the eight candidates (2026-11-25)
+
+- `tools\mpdev192-pointer-reference-readonly-probe.py` (SHA-256
+  `8B86721170CB6FF6C3D2C68F2DE648E2009B5DE79175C5C8D93EB62D6B9FC8D9`) and
+  `mpdev192-pointer-reference-readonly-probe-results-20261125.txt` (SHA-256
+  `27A060FCB37EFC3DF52408EC1A0A36E20D770A7859E627C4DF83EA5844917428`):
+  read-only scan of all 5,440 readable committed regions (8,247,762,944
+  bytes) for exact 64-bit pointers to the eight `mpdev190c` candidates, plus
+  local context dumps. No write, hook, inject, network, or input occurred.
+- `TARGET=... REF_COUNT=0` for all eight addresses. These fields are embedded
+  in larger structures rather than pointed-to standalone objects.
+- Every candidate holds `u16 0x93` (147) at the exact address, matching the
+  final HUD value from `mpdev190c`.
+- Context groups (all `CANDIDATE_ONLY`):
+  - `0x15783CE30`, `0x1810C9180`, `0x181966070`: count sits at `+0x10` inside
+    objects whose `-0x10` slot is a delegate-functor vtable
+    `0x141563330` or `0x141563368` (`?$DelegateFunctor@...@LayerController@ui@hh@@PEBD@Z`).
+    These look like captured/copied UI-delegate values, not a canonical
+    currency field.
+  - `0x15738D848`: count at object start; a `GOCTinyFsm`/`GOCTinyFsm2`
+    vtable (`0x141586600`) appears at `+0x18`.
+  - `0x1C4F7B220` and `0x1C50235F0`: byte-identical context around the count
+    (`9300 6262 0101...`), consistent with duplicated save/`CharacterData`
+    mirrors.
+  - `0x19DAB2FF8`: the previously rejected plugin+`0x28` slot; context shows
+    nearby pointers `0x19DAB2F48`, `0x19DAB2F01`, and `0x19D90A350`.
+  - `0x19628F734`: unaligned count inside a byte/packed buffer; no clean
+    object header.
+- Interpretation: the eight stable values are multiple mirrors/captures, not
+  one qualified canonical counter. No single write target, hook point,
+  authority model, resolver, or protocol mapping is qualified. No further
+  ring pickups were requested.
+
+Stage gates unchanged: Stage 2 `BUILD_ONLY`, Stage 3 `PREP_ONLY`, full test
+closed, `GATE_C=CLOSED`, QA `none`, no co-op claim, no ETA.
+
 ## Unknowns / not yet checked
 
 - Whether other players have the same Steam build id (16857613).
