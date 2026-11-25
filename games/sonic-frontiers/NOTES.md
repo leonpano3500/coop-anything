@@ -1911,6 +1911,49 @@ or input simulation occurred. Stage gates unchanged: Stage 2 `BUILD_ONLY`,
 Stage 3 `PREP_ONLY`, full test closed, `GATE_C=CLOSED`, QA `none`, no co-op
 claim, no ETA.
 
+## mpdev190 targeted sampling and corrected qualification (2026-11-25)
+
+- `tools\mpdev190-targeted-ring-candidate-sampler.py` samples only the 29
+  unique addresses parsed from the `mpdev189e` `CHANGED` lines, at 20 Hz (later
+  10 Hz), using only `PROCESS_VM_READ|PROCESS_QUERY_INFORMATION` and
+  `ReadProcessMemory`. Tool revisions: initial `39377B87...`, `6D21F36C...`,
+  `A7CFF820...`, and corrected `A5729A6F595D9FC266AB8A4B379F0F68D28EB599F2EF467CE61ECC0679556832`.
+- `mpdev190-targeted-ring-candidate-sampler-results-20261125.txt` (SHA-256
+  `47B4C310EDF3AD3C00D1AA0DFCDBE19E1EB3078FB830EF405A7781AB54AC60C5`):
+  `HUD_BEFORE=144`, 12-second post window. The pickup landed after the window
+  closed; the save mirror stayed `144` throughout and no candidate qualified.
+- `mpdev190b-...-results-20261125.txt` (SHA-256
+  `0F7B63A9D76549105ACF32A995BD7006986BAF82BDCCEEF4DCC251591F9499B2`):
+  `HUD_BEFORE=145`, 30-second window. Same timing result: save mirror stayed
+  `145` throughout, no candidate qualified.
+- `mpdev190c-...-results-20261125.txt` (SHA-256
+  `0296A17B75725569CBABE7DEF57A555A1E73944D187B3D7E3418C5E887E19F67`):
+  `HUD_BEFORE=146`, 120-second window at 10 Hz. The pickup was captured: the
+  save mirror went `146` (567 samples) then `147` (633 samples). Eight `u16`
+  addresses had `base_clean=1`, exactly one `146->147` transition, and final
+  value `147`. The tool reported zero because of a variable-shadowing bug: the
+  expected HUD value was overwritten by the sample list, invalidating the
+  `first`, `tail`, and `qualifies` fields.
+- `mpdev190c-corrected-analysis-20261125.txt` (SHA-256
+  `C952ED93667847FB722C11A128F72A579A23C2D4A58F6B6088580FEDB744C7ED`) is an
+  offline-only re-evaluation of the recorded summaries using the corrected
+  analyzer
+  (`tools\mpdev190-correct-summary-analysis.py`, SHA-256
+  `3BE943AF149E0CB97BA4099DDD5DA3D57954121E4150933F2D909956F7F2F30B`). It
+  reports eight corrected stable/unique `u16` candidates:
+  `0x15738D848`, `0x15783CE30`, `0x1810C9180`, `0x181966070`, `0x19628F734`,
+  `0x19DAB2FF8`, `0x1C4F7B220`, `0x1C50235F0`. The last two are the previously
+  rejected plugin slot and save mirror, respectively; both are reopened, not
+  promoted to a co-op claim.
+- All eight remain `CANDIDATE_ONLY`. No write target, hook point, authority
+  model, resolver, or protocol mapping is qualified. No further ring pickups
+  were requested after this run.
+
+No attach-write, hook, inject, install, network, friend contact, PC B access,
+or input simulation occurred. Stage gates unchanged: Stage 2 `BUILD_ONLY`,
+Stage 3 `PREP_ONLY`, full test closed, `GATE_C=CLOSED`, QA `none`, no co-op
+claim, no ETA.
+
 ## Unknowns / not yet checked
 
 - Whether other players have the same Steam build id (16857613).
