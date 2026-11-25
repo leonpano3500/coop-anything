@@ -1854,6 +1854,63 @@ No attach, write, hook, install, network, friend contact, input simulation, or
 live pickup occurred for this pass. Stage gates unchanged: Stage 2 `BUILD_ONLY`,
 Stage 3 `PREP_ONLY`, full test closed, QA `none`, no co-op claim, no ETA.
 
+## mpdev187-189e read-only ring-counter requalification (2026-11-25)
+
+- `mpdev187-getnumrings-body-20261125.txt` (SHA-256
+  `EB8C855CA81879F3BBF74DE740B7568BF75CD1CE14E11B76622BFAADF549D4B3`):
+  offline disassembly of `?GetNumRings@CharacterAc@save` (`0x140afc740`) is
+  `mov rax,[rcx+8]; movzx eax,word [rax]; ret`. This confirms the save getter
+  reads `CharacterData+0x0` through a pointer at `+8`; it does not identify an
+  immediate HUD counter.
+- `mpdev188-uinumberringcounter-vtable-20261125.txt` (SHA-256
+  `9127348CA4D4FC9F7B4EE7A5316645ED3F27BF28DBF781E6BBF54E1046FBF18A`):
+  static vtable read for `UINumberRingCounterContext` returned
+  `CANDIDATE_ONLY_NO_MAPPING`; later slots over-read adjacent data, so no ring
+  write site was qualified.
+- Fresh owner step-1 authorization produced
+  `tools\mpdev189-runtime-ring-differential-readonly-probe.py` (SHA-256
+  `054763900703ABFF29DF0C882E398B381E86A83E3B8A9A44C4500E4C95DC8FE2`).
+  Scope is only `OpenProcess(PROCESS_VM_READ|PROCESS_QUERY_INFORMATION)`,
+  `VirtualQueryEx`, and `ReadProcessMemory`; no write, hook, detour,
+  breakpoint, DLL load, injection, install, launch, restart, save, network,
+  friend contact, build-id check, PC B access, or input simulation.
+- `mpdev189-runtime-ring-differential-readonly-probe-results-20261125.txt`
+  (SHA-256 `EFCB3FEF92609E607F6C5C53D76B99521D74016975242E835FD66D3703A6A164`)
+  and `mpdev189b-...-results-20261125.txt` (SHA-256
+  `F9002B443450FEFD649142EEE0B61ED0D5A94ECB86ABFF568F867C0035C9FD3A`):
+  both failed with `DETAIL=NO_AFTER_SIGNAL`; no after-scan ran. Their partial
+  baselines showed `SAVE_MIRROR_U16` 139 and 140, matching the owner-reported
+  HUD values.
+- `mpdev189c-...-results-20261125.txt` (SHA-256
+  `0C745A922FCED8570E70268F6B72CFD4060BC6A3B897F797B5CCAB13A984D302`) and
+  `mpdev189d-...-results-20261125.txt` (SHA-256
+  `E310E66D0D59365916B1A92145129FBA986D432DFCE0B9520103A942ACD75C8E`):
+  owner-confirmed pickups `141->142` and `142->143` occurred, but the tool
+  reported zero changed addresses because hit dictionaries were keyed by
+  `(kind,value)` and the before/after keys differ by value. Removing the
+  alignment restriction and adding ASCII matching in `mpdev189d` was not the
+  cause of the zero result; the key mismatch was.
+- `mpdev189e-...-results-20261125.txt` (SHA-256
+  `2837587C56D1F5CDF5489CA492C4A807D0D1FE91D9DD0C6805F862162CB1BB2C`):
+  corrected key pairing. `HUD_BEFORE=143`, `HUD_AFTER_EXPECTED=144`,
+  `SAVE_MIRROR_U16=143`, all readable committed regions scanned (`PRIVATE`,
+  `IMAGE`, `MAPPED`), `CHANGED_ADDRESS_COUNT=53`, `CHANGED_IMAGE_COUNT=0`,
+  `CHANGED_PRIVATE_COUNT=53`. Notable candidates:
+  `0x19DAB2FF8` (`u16`/`u32` 143->144; old plugin+`0x28` slot previously
+  rejected in `mpdev087h`) and `0x1C4F7B220` (`u16` 143->144; resolved
+  `CharacterData+0x0` save mirror previously treated as save-only). The
+  after-scans ran about 74, 149, and 223 seconds after the pickup signal, so
+  immediacy was not qualified. All 53 addresses remain `CANDIDATE_ONLY`.
+- Consequences: the earlier rejections of `numRings`/`CharacterData+0x0` and
+  `word [[PlayerHsmContext+0x30]+0x28]` are reopened for targeted
+  requalification. `mpdev189e` does not qualify a write target, hook point,
+  authority model, resolver, or protocol mapping.
+
+No attach-write, hook, inject, install, network, friend contact, PC B access,
+or input simulation occurred. Stage gates unchanged: Stage 2 `BUILD_ONLY`,
+Stage 3 `PREP_ONLY`, full test closed, `GATE_C=CLOSED`, QA `none`, no co-op
+claim, no ETA.
+
 ## Unknowns / not yet checked
 
 - Whether other players have the same Steam build id (16857613).
