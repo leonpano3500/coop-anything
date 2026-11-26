@@ -1990,6 +1990,62 @@ claim, no ETA.
 Stage gates unchanged: Stage 2 `BUILD_ONLY`, Stage 3 `PREP_ONLY`, full test
 closed, `GATE_C=CLOSED`, QA `none`, no co-op claim, no ETA.
 
+## mpdev193-202 enemy/boss/item/story sync scope and static candidates (2026-11-26)
+
+- Offline-only verification: `build\mpdev2-cli.exe selftest` returned
+  `checks=12 failures=0 result=PASS`, including entity, boss, world, item,
+  story, reliable-event, and lifecycle layers; `itemstory-selftest` returned
+  `checks=7 failures=0 result=PASS`. These are synthetic in-memory/wire tests,
+  not in-game synchronization.
+- `mpdev202-enemy-item-story-sync-status-20261126.txt` (SHA-256
+  `92D595D79BE212652FF68673971B1A40E0F8066DD6078ABE1750E323E67DD2EF`)
+  consolidates the four requested systems. Enemy/boss status is unchanged:
+  `GOCEnemy+0x090` position and `GOCHealth+0x080` HP were read-only confirmed,
+  but `GOCEnemy+0x0fc` is not a stable cross-peer identity and no write path,
+  hook point, authority model, or boss phase mapping is qualified.
+- Item candidates come from the earlier `mpdev063` RFL/getter/setter
+  cross-check: `CharacterAc+0x8 -> CharacterData`, with `numRings` at `+0x00`,
+  `numPowerSeeds` `+0x30`, `numGuardSeeds` `+0x34`, `numFishCoins` `+0x38`,
+  `numFishTokens` `+0x3a`, `numGoldCards` `+0x3c`, and `numSlotStars` `+0x3e`.
+  Matching RFL names, offsets, widths, getters, setters, and caller contexts
+  are static evidence only; no item ID table, pickup authority point, or live
+  item write target is qualified.
+- New story static pass: `mpdev194-isworldextraflagset-20261125.txt` (SHA-256
+  `FE69A39CDDA5DFC1D488A5CD9573237F3504D1DCDE239EF4A793C08DD735BA28`),
+  `mpdev195-setworldextraflag-20261125.txt` (SHA-256
+  `00FC101B312ACEA88F7FC9333BA8D3BC61875D8865D078AB1FCB5198A990896`),
+  `mpdev201-worldextraflag-get-core-20261125.txt` (SHA-256
+  `B39E1195B7E80CA34F6797FCFF549EDF39D007E321DD4104AEDC7EB63FFC9480`),
+  `mpdev199b-extraflag-set-core-20261125.txt` (SHA-256
+  `06B8F2C4868586EB22FA6706D777C092C24E2F71B49D989E875BC6681E7934A8`),
+  and `mpdev199d-extraflag-set-core-tail-20261125.txt` (SHA-256
+  `AB64A5E4D266A61D01A45C07552295C62F03D3F5ED2962877A5B28D046FED9A5`)
+  show `IsWorldExtraFlagSet` (`0x14086d0e0`) and `SetWorldExtraFlag`
+  (`0x14086d560`) mapping `(world, flag)` through base table `0x141572BB0`
+  into a save-side bitfield at `[ExtraFlagContainerAc accessor+0x8]`.
+  `bit = base[world] + flag`; the dword index is `bit >> 5`, mask
+  `1 << (bit & 31)`. The setter ORs or AND-NOTs that dword and calls
+  `0x14020fb70` in the change path. Count table `0x141572C70` starts
+  `0x80,0x80,0x80,4,4,4,6,6,...`. This is a candidate story replication model,
+  not a live-qualified write target or hook.
+- Supporting accessor dumps: `mpdev196-save-flag-accessors-20261125.txt`
+  (SHA-256 `5876A258488F7958D4A747DE669E9CE75703F8437FC32C5564AA70E8EF95DB1B`),
+  `mpdev197-getextraflagaccessor-20261125.txt` (SHA-256
+  `17402A24D2A0C50236ABA4D928D653BE12758279629D7C20FAF92AA966317F14`),
+  `mpdev198c-extraflag-get-accessors-20261125.txt` (SHA-256
+  `614693F3DE62948C4D6C3FA6725722C3C8B576F7A15B2AD9AF7F800F4047178D`),
+  and `mpdev199-extraflag-set-accessors-20261125.txt` (SHA-256
+  `447C249E1CC754F8AF1F7770A3D90E5B4EF673B7366908D7A4B3D03681741A7A`).
+- The pinned read-only item/story RTTI scanner could not run: the PowerShell
+  wrapper was blocked by execution policy, and direct invocation with the
+  matching scanner hash reported `FAIL: process not found`. The game was not
+  launched by the assistant. No live trace was produced.
+
+No attach-write, hook, inject, install, network, friend contact, PC B access,
+or input simulation occurred. Stage gates unchanged: Stage 2 `BUILD_ONLY`,
+Stage 3 `PREP_ONLY`, full test closed, `GATE_C=CLOSED`, QA `none`, no co-op
+claim, no ETA.
+
 ## Unknowns / not yet checked
 
 - Whether other players have the same Steam build id (16857613).
