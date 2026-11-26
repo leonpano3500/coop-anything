@@ -2122,6 +2122,35 @@ access, or input simulation occurred. Gates unchanged: Stage 2 `BUILD_ONLY`,
 Stage 3 `PREP_ONLY`, full test closed, `GATE_C=CLOSED`, QA `none`, no co-op
 claim, no ETA.
 
+## mpdev216-225 GameObject +0x018 enemy-identity candidate (2026-11-26)
+
+- `mpdev216-enemy-keyfield-20261126.txt` (SHA-256
+  `5032F9D382587A6BBBC929E9C4ED1D5C6CBAD7673ED7B36DCF88DACD9F9BBBDD`)
+  and `mpdev216b-enemy-keyfield-20261126.txt` (SHA-256
+  `40AFE87B53D3DF691F917B532454367241DE8A31B4299605082BFA3E2077D815`)
+  are two read-only enemy snapshots from owner-launched PID 4440. They show
+  distinct small values at `GameObject+0x018` on enemies and components.
+- `tools\mpdev224-enemy-snapshot-compare.py` (SHA-256
+  `6BE6B08763AF1405CDB2C48355A9EED0D29B0048078CC33194DE6BE964DF1651`)
+  compared the traces offline. `mpdev224-enemy-snapshot-comparison-20261126.txt`
+  (SHA-256 `EB2057EE24AA88590150D29938BE54ED85BF7C92E4622E7DD3B15384ED8F5C1C`)
+  reports 28 common object addresses, **18 stable +0x018 values and 0 changed**.
+  `GOCEnemy 0x1573B0320` kept `+0x018 = 0x12105` while its position changed;
+  the two Jellyman objects kept `0x10573` and `0x1056F`.
+- `mpdev225-objectid-candidate-20261126.txt` (SHA-256
+  `68FE5A5CE208AD6644C4A4934A2FDC7A141176CF22DDA7F7C0A63383DD9F2662`)
+  records `ENEMY_IDENTITY=CANDIDATE_GameObject+0x018_NOT_CROSS_PC_QUALIFIED`.
+  This is stronger than the rejected `GOCEnemy+0x0fc` flag index, but determinism
+  across independent PCs/save loads/spawn orders is unproven. A read-only
+  two-PC correlation is the next required test and was not performed.
+- Static constructor/vtable context is in `mpdev217`-`mpdev223`; the
+  displacement scanner was generalized to accept other offsets.
+
+No writes, hooks, injection, install, network, friend contact, PC B access,
+or input simulation occurred. Gates unchanged: Stage 2 `BUILD_ONLY`, Stage 3
+`PREP_ONLY`, full test closed, `GATE_C=CLOSED`, QA `none`, no co-op claim, no
+ETA.
+
 ## Unknowns / not yet checked
 
 - Whether other players have the same Steam build id (16857613).
