@@ -2161,6 +2161,32 @@ ETA.
   contact, input simulation, or game launch. PC B has not been run yet; the
   owner must launch the game there and return the trace for offline comparison.
 
+## mpdev227-228 first cross-PC identity comparison (2026-11-26)
+
+- The friend ran the read-only scanner and returned
+  `mpdev226-pcB-objectid018-raw-trace.txt` (SHA-256
+  `7269F6163B854A3003A0C58AAAFE5FD5C533025233FB1BD88EB01D6CCB38226F`).
+  `tools\mpdev227-crosspc-objectid-compare.py` (SHA-256
+  `AF10B2DE12DED062CEDB2991BA85801A06C88A034ADCC0FC67BFF92A72EEEA57`)
+  compared class+`0x018` identities offline, ignoring process addresses.
+- `mpdev227-crosspc-objectid-comparison-20261126.txt` (SHA-256
+  `11EC072D193E83F4F2807DBA4035BE186684E0784044F49B46E55BC3C04D9E84`):
+  **4 exact matches**: `EnemySquad +0x018 = 0x104BF` on both PCs plus three
+  info singleton IDs (`0x3`). There were 15 PC-A-only and 6 PC-B-only
+  identities; actual Jellyman IDs differed (`0x1056F/0x10573/0x10625` on A
+  versus `0x108C4/0x108D3/0x108D6` on B).
+- `mpdev228-crosspc-objectid-findings-20261126.txt` (SHA-256
+  `3264F37DB488FCF75B0E71C1DB565BDFB48F98FEFE8EED39D9FBCE129D94CAEA`):
+  the `EnemySquad` match is positive evidence for an engine object ID, but raw
+  `GameObject+0x018` is **not yet qualified as a stable cross-peer enemy
+  identity**. A controlled same-save/same-area scan is required. If IDs still
+  differ, identity must come from a deterministic spawner/world mapping.
+
+No writes, hooks, injection, install, network, friend contact by the
+assistant, PC B access by the assistant, or input simulation occurred. Gates
+unchanged: Stage 2 `BUILD_ONLY`, Stage 3 `PREP_ONLY`, full test closed,
+`GATE_C=CLOSED`, QA `none`, no co-op claim, no ETA.
+
 ## Unknowns / not yet checked
 
 - Whether other players have the same Steam build id (16857613).
