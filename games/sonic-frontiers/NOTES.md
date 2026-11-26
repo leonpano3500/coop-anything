@@ -2151,6 +2151,16 @@ or input simulation occurred. Gates unchanged: Stage 2 `BUILD_ONLY`, Stage 3
 `PREP_ONLY`, full test closed, `GATE_C=CLOSED`, QA `none`, no co-op claim, no
 ETA.
 
+## mpdev226 PC B read-only identity-correlation package prepared (2026-11-26)
+
+- `RESULTS\mpdev226-pcB-objectid018-readonly-package.zip` (SHA-256
+  `9B4E0123D9A0F21BB0C425EE85DD725B6BB654D92A06859898D0C4C4B16538F4`)
+  contains the pinned read-only enemy keyfield scanner, a hash-checking
+  PowerShell runner, and instructions. It tests `GameObject+0x018` on PC B;
+  it performs no writes, injection, mod install, network action, friend
+  contact, input simulation, or game launch. PC B has not been run yet; the
+  owner must launch the game there and return the trace for offline comparison.
+
 ## Unknowns / not yet checked
 
 - Whether other players have the same Steam build id (16857613).
