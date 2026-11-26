@@ -2084,6 +2084,17 @@ contact, PC B access, or input simulation occurred. Gates unchanged: Stage 2
 `BUILD_ONLY`, Stage 3 `PREP_ONLY`, full test closed, `GATE_C=CLOSED`, QA
 `none`, no co-op claim, no ETA.
 
+## mpdev214 item/story read-only probe prepared (2026-11-26)
+
+- `tools\mpdev214-item-story-readonly-probe.py` (SHA-256
+  `88C88E99D0529C91CCCC849D394F14B18C89EF9A9EB9E93A292A2BB97165E5C7`)
+  reuses the pinned `mpdev189` read-only save-chain resolver. Static accessors
+  imply `ExtraFlagData = GameData + 0xB340 + 0x1C00 = GameData + 0xCF40`; the
+  probe reads that candidate bitfield, decodes the first 16 world base/count
+  table entries, and dumps the seven `CharacterData` item fields. It is ready
+  for an owner-launched game, but has not been run live. All values remain
+  `CANDIDATE_ONLY`; no write target, hook, authority model, or co-op claim.
+
 ## Unknowns / not yet checked
 
 - Whether other players have the same Steam build id (16857613).
