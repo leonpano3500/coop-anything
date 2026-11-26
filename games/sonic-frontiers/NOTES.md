@@ -2046,6 +2046,44 @@ or input simulation occurred. Stage gates unchanged: Stage 2 `BUILD_ONLY`,
 Stage 3 `PREP_ONLY`, full test closed, `GATE_C=CLOSED`, QA `none`, no co-op
 claim, no ETA.
 
+## mpdev203-213 story callers and enemy-identity rejection (2026-11-26)
+
+- `mpdev203-worldextraflag-callers-20261126.txt` (SHA-256
+  `3803461F00BA0F193E393FDA0EBF2E7994028D0B6358FBE928D569C042D40065`):
+  `IsWorldExtraFlagSet` has 134 direct call sites and `SetWorldExtraFlag` 75,
+  across bosses, emerald storage, NPCs, Kodama, IslandManager, and scripts.
+  `mpdev205-setworldextraflag-argflow-20261126.txt` (SHA-256
+  `38176AF4EDA08C217D611A27BEEDE79FE552E27BC722DE7ED44BF2C6D56E2F09`)
+  shows r8d stage/world indices up to `0x25`, small edx flag indices, and r9b
+  usually `1`, consistent with the `mpdev202` bitfield model. Still static
+  candidate evidence, not live qualification.
+- `mpdev206-gocenemy-create-20261126.txt` (SHA-256
+  `FD8FB7532635231E17B2CF89457DCCCA5C517E64BBD7C14B8AA7B49E7C625460`)
+  shows `GOCEnemy::Create` zeroing the `+0xfc` region but assigning no ID.
+- `tools\mpdev209-gocenemy-fc-access-scan.py` (SHA-256
+  `BC2A1A95FDF7C2F114A9EB97388508603DC3C760F3745748A61F5AA6AA4E9F98`)
+  found 7,703 aligned memory operands with displacement `0xfc`; only six are
+  near `GOCEnemy`, all reads, no writes. See
+  `mpdev209-gocenemy-fc-access-scan-20261126.txt` (SHA-256
+  `1EF314E32A92E1CAD0F72E3767892D41B45BE785ECC0B7FB65CC5B1AD09ED3CC`).
+- `mpdev210-gocenemy-fc-read1-20261126.txt` (SHA-256
+  `EC4C936C27AC738D1470218EC2BEF7D3CF78EECA6334B56D245B1F4F53D16EB4`) and
+  `mpdev211-gocenemy-fc-read2-20261126.txt` (SHA-256
+  `83FB6326589D75AAE71F36A30BBDCBA765FB3432CF19045B274E738ADF814692`)
+  show `GOCEnemy+0xfc` passed as r8d to `0x140b005e0`, the same save/world-flag
+  getter family as the world-extra-flag reader. Therefore
+  `GOCEnemy+0x0fc = REJECTED_AS_CROSS_PEER_ENEMY_IDENTITY`; it is a story/flag
+  index used by enemy logic. `ENEMY_IDENTITY=NOT_FOUND`; a spawner/GameObject/
+  world spawn mapping is still required.
+- `mpdev213-enemy-identity-fc-rejection-20261126.txt` (SHA-256
+  `7232E1C9593095B90336FBE9B81102F0D6BBB3B938A2B8703267B5EED83D4FCE`)
+  consolidates the rejection and story-caller evidence.
+
+No live process access, writes, hooks, injection, install, network, friend
+contact, PC B access, or input simulation occurred. Gates unchanged: Stage 2
+`BUILD_ONLY`, Stage 3 `PREP_ONLY`, full test closed, `GATE_C=CLOSED`, QA
+`none`, no co-op claim, no ETA.
+
 ## Unknowns / not yet checked
 
 - Whether other players have the same Steam build id (16857613).
