@@ -2095,6 +2095,33 @@ contact, PC B access, or input simulation occurred. Gates unchanged: Stage 2
   for an owner-launched game, but has not been run live. All values remain
   `CANDIDATE_ONLY`; no write target, hook, authority model, or co-op claim.
 
+## mpdev214-215 live item/story probe and immediate ring read qualification (2026-11-26)
+
+- `mpdev214-item-story-readonly-probe-results-20261126.txt` (SHA-256
+  `62CE6B20E48F9C00A1C0C82036978490D11B96E1365A516BD3BFBBADF1A943D1`):
+  owner-launched PID 4440, read-only save probe succeeded. It read
+  `numRings=138`, `numPowerSeeds=11`, `numGuardSeeds=11`, and all decoded
+  world-extra flags unset for the first 16 world table entries. The story
+  candidate address was `GameData+0xCF40 = 0x1C4F880E0`. Seed counts and story
+  flags were not owner-confirmed.
+- `mpdev-itemstory-raw-trace-20261126-034419.txt` (SHA-256
+  `1CE250D275F9BBEA2D22E610FCB459F3414C66C3E842065BEBF28C49619525F1`):
+  the previously blocked RTTI scan completed read-only with 17 candidate
+  objects. It found `BlackboardItem` at `0x19DAB2FD0` with `FIELD +0x028 = 139`.
+- `mpdev215-ring-counter-owner-confirmation-20261126.txt` (SHA-256
+  `A96EDA8FD5075475FFB3462D890D05ED8DFC39B41A25E44E4494BFA620E23BBD`):
+  the owner confirmed the current HUD ring count is **139**. Therefore
+  `BlackboardItem+0x28` matches the immediate HUD value, while the save-side
+  `numRings=138` mirror is stale by one and must not be used as the immediate
+  runtime counter. This is a current-snapshot read qualification only; no
+  write target, hook, authority model, resolver, protocol mapping, or co-op
+  claim is qualified.
+
+No pickup, write, hook, injection, install, network, friend contact, PC B
+access, or input simulation occurred. Gates unchanged: Stage 2 `BUILD_ONLY`,
+Stage 3 `PREP_ONLY`, full test closed, `GATE_C=CLOSED`, QA `none`, no co-op
+claim, no ETA.
+
 ## Unknowns / not yet checked
 
 - Whether other players have the same Steam build id (16857613).
