@@ -2234,6 +2234,27 @@ ETA.
   hooks, authority, networking, or working co-op; new write targets need their
   own exact approval.
 
+## mpdev240 offline progression adapter (2026-11-27)
+
+- Added `src\coop\mpdev_progression_adapter.h` (SHA-256
+  `A263FE18FDEF06380813948C82532EF69D17BD2CCC0E1DCAE35831B800FFA443`) and
+  `mpdev_progression_adapter.cpp` (SHA-256
+  `944A9C7CDD478DC02ACEF72C23CEA116902B44AA14C0599D933C5722768C3CB3`).
+  It maps `BlackboardItem+0x28` to item ID 1, the other six `CharacterData`
+  scalar fields to IDs 2-7, and decodes the `GameData+0xCF40` world-extra
+  bitfield into story flags `(world << 8) | flagIndex`. All reads use the
+  injected `IMemoryReader`; there is no live write path in the adapter.
+- `build\mpdev2-cli.exe` (SHA-256
+  `958388BE5EB6716E90BBF72670CDE0E6E66B71B2A55CC71E572E6A86C7545902`)
+  passes `selftest` with **13/13 checks**, including the new progression
+  adapter test, and `itemstory-selftest` with **7/7 checks**. This validates
+  the item/story mapping and offline replication, not online play.
+
+No live writes, hooks, injection, install, network, friend contact, PC B
+access, or input simulation occurred for this change. Gates unchanged:
+Stage 2 `BUILD_ONLY`, Stage 3 `PREP_ONLY`, full test closed, `GATE_C=CLOSED`,
+QA `none`, no co-op claim, no ETA.
+
 ## Unknowns / not yet checked
 
 - Whether other players have the same Steam build id (16857613).
