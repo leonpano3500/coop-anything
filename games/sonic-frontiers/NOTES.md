@@ -2374,6 +2374,25 @@ QA `none`, no co-op claim, no ETA.
 - Gates unchanged: Stage 2 `BUILD_ONLY`, Stage 3 `PREP_ONLY`, full test closed,
   `GATE_C=CLOSED`, `READY_FOR_INSTALL=NO`, QA `none`, no co-op claim, no ETA.
 
+## mpdev255 local two-instance runner prepared (2026-11-27)
+
+- Added `tools\run-local-anchor-compare.ps1` (SHA-256
+  `C6B27537FC2FC2713611759C606B7BFE929A29014A13AC776335B4705A3BCF79`). It
+  auto-detects exactly two `SonicFrontiers` processes (or accepts explicit
+  `-PidA`/`-PidB`), runs `mpdev251` on each, and compares the traces offline with
+  `mpdev254`. PowerShell parse check passed.
+- This runner does NOT launch, restart, close, inject into, hook, write to, or
+  simulate input in the game. It only uses the existing read-only dumper
+  `mpdev251`. At preparation time only owner-launched PID `33736` was running,
+  so the second instance was not launched and no comparison was run.
+- Owner workflow: launch a second instance, load the same save/area on both,
+  then run
+  `powershell -ExecutionPolicy Bypass -File .\tools\run-local-anchor-compare.ps1`
+  from `SonicFrontiers-MP-DEV`. Output goes to
+  `RESULTS\mpdev255-local-anchor-compare.txt`.
+- Gates unchanged: Stage 2 `BUILD_ONLY`, Stage 3 `PREP_ONLY`, full test closed,
+  `GATE_C=CLOSED`, `READY_FOR_INSTALL=NO`, QA `none`, no co-op claim, no ETA.
+
 ## Unknowns / not yet checked
 
 - Whether other players have the same Steam build id (16857613).
