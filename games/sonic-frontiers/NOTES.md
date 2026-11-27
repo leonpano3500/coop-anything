@@ -2292,6 +2292,27 @@ QA `none`, no co-op claim, no ETA.
   those components and supporting ObjectId persistence across restart for the
   same save/area.
 
+## mpdev245-249 loopback MPD2 health sync (2026-11-27)
+
+- `tools\mpdev245-loopback-enemy-hp-sync.py` (SHA-256
+  `1F50CD3DB869395AC0E1EC874FCB5347906B98197B455A1D2DB8D69A9DC74C38`)
+  sent one handcrafted MPD2 `HealthEvent` over loopback UDP from host PID
+  `33736` to client PID `15276`. The client resolved its own `GOCHealth
+  0x156F7F770` with ObjectId `0x1215D`, applied `33 -> 32`, read back `32`,
+  restored `33`, and read back `33`. The host received `APPLIED32` and
+  `RESTORED33`.
+- Evidence: `RESULTS\mpdev245-client-20261127.txt` (SHA-256
+  `0F6B43712B6A849C5A8B40194659070231AC994A61AA57B42A2D0B3868A444B0`),
+  `RESULTS\mpdev245-host-20261127.txt` (SHA-256
+  `D9D520A48763C85B808454594765A6AB2DFBDDCBA6C678D8CCC499E826D58697`).
+- `mpdev249-loopback-health-sync-qualified-20261127.txt` (SHA-256
+  `0A0F99B27FA51E8A45DB76A40C23806B70A96484794B4A7239B5E03A5DDDC2DF`)
+  records `LOOPBACK_MDP2_HEALTH_EVENT = QUALIFIED`, limited to this crafted
+  packet plus the already-qualified local HP write path. The packet netId was
+  the client-local ObjectId, not a cross-peer stable identity. Host and client
+  enemy ObjectIds still differ. This does not qualify a resolver, authority
+  model, hooks, a network mod, two-PC play, friend play, or working co-op.
+
 ## Unknowns / not yet checked
 
 - Whether other players have the same Steam build id (16857613).
