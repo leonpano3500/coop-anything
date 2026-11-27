@@ -2187,6 +2187,34 @@ assistant, PC B access by the assistant, or input simulation occurred. Gates
 unchanged: Stage 2 `BUILD_ONLY`, Stage 3 `PREP_ONLY`, full test closed,
 `GATE_C=CLOSED`, QA `none`, no co-op claim, no ETA.
 
+## mpdev229-237 ObjectId layout and spawn model (2026-11-27)
+
+- `mpdev229-objectworld-spawn-body-20261127.txt` (SHA-256
+  `D53063AA7A9B36957F439E87B8C6BEF43200FE9A8353E7C3796BE8344A560731`),
+  `mpdev230-objectworld-id-lookup-20261127.txt` (SHA-256
+  `228AE51AAEE5A921BBDCA8A853870635EAE974C4F3E41BD103E0879A599C0717`),
+  and `mpdev234-getgameobjecthandlebyobjectid-20261127.txt` (SHA-256
+  `31B2926F5035D55CD41D01033934F97DD5CD8C16401DD26688688B18443DD224`)
+  show `ObjectWorldChunk` spawning and resolving objects by `ObjectId`.
+- `mpdev233-objectid-methods-20261127.txt` (SHA-256
+  `BD442CC3BD8901C8DFF9491B264AC3B2D91CB1171257EC4582CE098C8E8EF8B1`)
+  and `mpdev236-objectid-isnonnull-20261127.txt` (SHA-256
+  `99E749F087A7A532D791D3199C5F6242C4B13C601A33919624B2DB99096E10CF`)
+  show `ObjectId` is 16 bytes (two qwords), not a single 32-bit counter.
+  `GameObject+0x018` is consistent with the start of that value; the Jellyman
+  layout becomes `qword0=0x0000000100010573`,
+  `qword1=0x0000000100008000`.
+- `mpdev237-objectid-layout-and-spawn-model-20261127.txt` (SHA-256
+  `B2C421228EB29D0CF9DAA0EEABCC6171D31EBA5AEF2754D1D990F0B3D89499D4`)
+  records `ENEMY_IDENTITY=CANDIDATE_GameObject_ObjectId+0x018_NOT_FULLY_QUALIFIED`.
+  This supports a spawn-identity model, but the cross-PC enemy ID differences
+  mean save/spawn history still must be controlled before replication use.
+
+No writes, hooks, injection, install, network, friend contact, PC B access,
+or input simulation occurred. Gates unchanged: Stage 2 `BUILD_ONLY`, Stage 3
+`PREP_ONLY`, full test closed, `GATE_C=CLOSED`, QA `none`, no co-op claim, no
+ETA.
+
 ## Unknowns / not yet checked
 
 - Whether other players have the same Steam build id (16857613).
