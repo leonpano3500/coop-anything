@@ -2239,16 +2239,17 @@ ETA.
 - Added `src\coop\mpdev_progression_adapter.h` (SHA-256
   `A263FE18FDEF06380813948C82532EF69D17BD2CCC0E1DCAE35831B800FFA443`) and
   `mpdev_progression_adapter.cpp` (SHA-256
-  `944A9C7CDD478DC02ACEF72C23CEA116902B44AA14C0599D933C5722768C3CB3`).
+  `7C6FB210536BABAD051D5DD97CA693B9B3CFA0C98BA2ED3C767D565EE1B8F32B`).
   It maps `BlackboardItem+0x28` to item ID 1, the other six `CharacterData`
   scalar fields to IDs 2-7, and decodes the `GameData+0xCF40` world-extra
   bitfield into story flags `(world << 8) | flagIndex`. All reads use the
   injected `IMemoryReader`; there is no live write path in the adapter.
 - `build\mpdev2-cli.exe` (SHA-256
-  `958388BE5EB6716E90BBF72670CDE0E6E66B71B2A55CC71E572E6A86C7545902`)
+  `F3180433D30BAD095E013EB1F318DED34126BC7598851C377065D731A01CD59C`)
   passes `selftest` with **13/13 checks**, including the new progression
-  adapter test, and `itemstory-selftest` with **7/7 checks**. This validates
-  the item/story mapping and offline replication, not online play.
+  adapter test, and `itemstory-selftest` with **7/7 checks**. The adapter
+  output is also fed through the real item/story replication layers, covering
+  the full offline path. This validates mapping and replication, not online play.
 
 No live writes, hooks, injection, install, network, friend contact, PC B
 access, or input simulation occurred for this change. Gates unchanged:
