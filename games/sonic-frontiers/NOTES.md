@@ -2313,6 +2313,43 @@ QA `none`, no co-op claim, no ETA.
   enemy ObjectIds still differ. This does not qualify a resolver, authority
   model, hooks, a network mod, two-PC play, friend play, or working co-op.
 
+## mpdev250-253 world-anchor survey (2026-11-27)
+
+- `mpdev250-spawn-world-keyfield-scan-20261127.txt` (SHA-256
+  `108BD6C700F937BA681F8D94AB84ECD086C1EEDFD967A51D23E99416C9FC0B40`) is a
+  broad read-only RTTI/keyfield survey of owner-launched PID `33736`. It scanned
+  12179 objects and found usable singleton/anchor classes: `StageInfo`,
+  `GameModeStage`, `IslandRangeSpawningManager`, `EnemySquad`, plus many
+  `StageData`/`LayerData` objects. These are CANDIDATES only.
+- `tools\mpdev251-world-anchor-dump.py` (SHA-256
+  `B291F1282252315B44A2A4C73DFE6B3F12137A4F0629D00ACC42806DCBB113F1`) is a
+  compact read-only dump tool. Its host result
+  `mpdev251-host-world-anchors-20261127.txt` (SHA-256
+  `763ED2A88EAB8D69FE1C23F4000D87A4DCD25712BBFFBE5182DEC4C3B8A6F5C2`) and the
+  narrow reference `mpdev252-host-world-anchor-reference-20261127.txt`
+  (SHA-256 `9AA320A3A6EA0FFAAFA69A1CC6CA0A0EB3D6CCD2A8D648717BEF094BE4E27720`)
+  agree on these candidate values:
+  `StageInfo+0x018 = 0x1001C`, `GameModeStage+0x018 = 0x10045`,
+  `IslandRangeSpawningManager+0x088 = 0x1005F`, and
+  `EnemySquad+0x018 = 0x104BF`.
+- Pointer-like or unstable fields were excluded from the candidate set:
+  `IslandRangeSpawningManager+0x018` (`0x976F28A0`), `StageData+0x018` values
+  such as `0xC112E1C0`, and `GameModeStage+0x03C`, which changed between scans
+  (`0x1ECA9` vs `0x1F3A0`).
+- `mpdev253-world-anchor-findings-20261127.txt` (SHA-256
+  `BE1C6D7D640DB5B475C4E3CA574D406BCFA87FF29736641BC8A98094D88CB3CD`) records
+  `STATUS=CANDIDATE_ONLY_NOT_CROSS_PC_QUALIFIED`. `EnemySquad+0x018` previously
+  matched exactly on PC A and PC B, but the other anchors still require a
+  controlled same-save/same-area read-only PC B comparison. No deterministic
+  cross-peer enemy mapping is qualified yet.
+- `RESULTS\mpdev252-pcB-world-anchor-package.zip` (SHA-256
+  `A428D73211D3E197079D7FA0BFE5EF260A09A29339FF0CE0E2C4A56EFFF468A5`) was
+  prepared for that controlled READ-ONLY scan. It was not sent, run, or used to
+  contact a friend. No writes, hooks, injection, install, internet action,
+  friend contact, PC B access by the assistant, or input simulation occurred.
+  Gates unchanged: Stage 2 `BUILD_ONLY`, Stage 3 `PREP_ONLY`, full test closed,
+  `GATE_C=CLOSED`, `READY_FOR_INSTALL=NO`, QA `none`, no co-op claim, no ETA.
+
 ## Unknowns / not yet checked
 
 - Whether other players have the same Steam build id (16857613).
