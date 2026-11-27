@@ -2377,7 +2377,9 @@ QA `none`, no co-op claim, no ETA.
 ## mpdev255 local two-instance runner prepared (2026-11-27)
 
 - Added `tools\run-local-anchor-compare.ps1` (SHA-256
-  `C6B27537FC2FC2713611759C606B7BFE929A29014A13AC776335B4705A3BCF79`). It
+  `8D83EA75672FB07AD4304B3D2BA3ED2341F4A035D7171745D7280DF957ED6E79`; an
+  initial version wrote `-0` filenames before auto-detecting PIDs, which was
+  fixed and the traces were renamed without re-running the game). It
   auto-detects exactly two `SonicFrontiers` processes (or accepts explicit
   `-PidA`/`-PidB`), runs `mpdev251` on each, and compares the traces offline with
   `mpdev254`. PowerShell parse check passed.
@@ -2390,6 +2392,37 @@ QA `none`, no co-op claim, no ETA.
   `powershell -ExecutionPolicy Bypass -File .\tools\run-local-anchor-compare.ps1`
   from `SonicFrontiers-MP-DEV`. Output goes to
   `RESULTS\mpdev255-local-anchor-compare.txt`.
+- Gates unchanged: Stage 2 `BUILD_ONLY`, Stage 3 `PREP_ONLY`, full test closed,
+  `GATE_C=CLOSED`, `READY_FOR_INSTALL=NO`, QA `none`, no co-op claim, no ETA.
+
+## mpdev256 local two-instance identity result (2026-11-27)
+
+- Owner launched a second instance and loaded the same save/area. Both
+  `mpdev251` dumps passed `RESULT=PASS_READONLY`:
+  `mpdev255-local-A-33736.txt` (SHA-256
+  `2D102B0F5AB91310E58348D3110AB0FB1EA9594D14784AD5DD8DC04F119ED81F`) and
+  `mpdev255-local-B-1672.txt` (SHA-256
+  `43FAD394A949487320883FF318C6005F60AE70C02640BC30B4EE17AFA2E630C8`).
+- `mpdev255-local-anchor-compare.txt` (SHA-256
+  `3589EF906F986EFB4578555D4928E0048366EFC8321A0F9B8813318D6CB40905`)
+  reports `STATUS=ANCHOR_VALUES_DO_NOT_QUALIFY_MATCH` for distinct PIDs.
+- `StageInfo+0x018 = 0x1001C` matched on both instances; its secondary fields
+  `+080=0x43`, `+088=0x4A`, `+0C4=0x35`, and `+1B4=0x36` matched too. This
+  supports `StageInfo` as a stage/area anchor candidate only.
+- `GameModeStage+0x018 = 0x10045` matched; `+0x03C` differed again
+  (`0x28BC9` vs `0x10EB`) and remains excluded.
+- `IslandRangeSpawningManager+0x088` mismatched (`0x1005F` vs `0x41559E98`,
+  pointer-like on the client) and its `+084` was `2` vs `1`. It is rejected as
+  a stable cross-instance anchor in this state.
+- `EnemySquad+0x018` mismatched (`0x104BF` vs `0x104C4`). This rejects it as a
+  cross-instance identity despite the earlier accidental cross-PC match; it
+  appears session/spawn-order dependent.
+- `mpdev256-local-two-instance-findings-20261127.txt` (SHA-256
+  `284D3E197AAAA9919B4660957358EEA0FD823A84730E9388C0EDF891B2D0E64C`) records
+  the outcome. No deterministic cross-peer enemy mapping is qualified; raw
+  `ObjectId` and `EnemySquad+0x018` are not safe identity keys. The remaining
+  direction is a deterministic `StageInfo`/`GameModeStage` anchor combined with
+  a qualified spawn-order or spawner key, which is still `NOT_FOUND`.
 - Gates unchanged: Stage 2 `BUILD_ONLY`, Stage 3 `PREP_ONLY`, full test closed,
   `GATE_C=CLOSED`, `READY_FOR_INSTALL=NO`, QA `none`, no co-op claim, no ETA.
 
