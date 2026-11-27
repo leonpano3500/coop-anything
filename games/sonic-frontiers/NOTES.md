@@ -2426,6 +2426,46 @@ QA `none`, no co-op claim, no ETA.
 - Gates unchanged: Stage 2 `BUILD_ONLY`, Stage 3 `PREP_ONLY`, full test closed,
   `GATE_C=CLOSED`, `READY_FOR_INSTALL=NO`, QA `none`, no co-op claim, no ETA.
 
+## mpdev257-260 EnemySquad and relative-ID candidate (2026-11-27)
+
+- `tools\mpdev257-enemy-squad-field-dump.py` (SHA-256
+  `6504DE9C1690453342701E9B68B60997172DDBB872199472E927EF5C2CF2E50D`) and
+  `tools\mpdev258-enemy-squad-field-compare.py` (SHA-256
+  `6E16994699E556EABF5BBB1619F5D7D822C251BE250E3AE4B7CD621BBB9DC80D`) did a
+  wide read-only `EnemySquad` field survey on both live instances. Dumps:
+  `mpdev257-enemy-squad-A-33736.txt` (SHA-256
+  `D414CB4C40B51EBD8E3257D1C495B52F5EA9B8C5234BCAD1E7640A61A0FC6268`) and
+  `mpdev257-enemy-squad-B-1672.txt` (SHA-256
+  `E85499801939BC1DEA34F854F252727A2A2BBA8A630CFD257E70928B0757ECBF`).
+  `mpdev258-enemy-squad-field-comparison.txt` (SHA-256
+  `CB58C6A58B8BD3277FC0F9019A234374A62846E628BF0F9AC2C1D4AB89F96605`)
+  reports 137 common fields, 131 matches, and 6 mismatches. Five mismatches are
+  address-like self references (`+0x058`, `+0x078`, `+0x0C8`, `+0x130`,
+  `+0x1B0`); the sixth is raw `+0x018`. No new stable per-enemy key was found.
+- `tools\mpdev259-enemy-object-dump.py` (SHA-256
+  `57E359DD2A4BF20AEB6642DB10A7DFA7DADBC7CC5883EBEC2672C1F4596E1353`) dumped
+  enemy objects read-only. `mpdev259-enemy-A-33736.txt` (SHA-256
+  `9D0A356220F8BEBB30D5FDE27606F3B9222BD61889924472A0DB6A53E46F40F5`) and
+  `mpdev259-enemy-B-1672.txt` (SHA-256
+  `204C26EFAE339511BF52AAC4382964DD27D869C9199875B1D1902623C7B1C55D`) each
+  found 3 `EnemyJellyman`, 2 `GOCEnemy`, and 3 `GOCHealth` objects. Raw IDs and
+  live positions differ across instances; no identity is claimed from them.
+- `tools\mpdev260-relative-id-candidate.py` (SHA-256
+  `4C3D99F0D609D8EDE030C2649BE2A0D9639F715C877CF0258D5DDBA56F5186FD`) tested
+  `EnemyJellyman.objectId - EnemySquad+0x018`. Its result
+  `mpdev260-relative-id-candidate-20261127.txt` (SHA-256
+  `4151A25BD10342D910C7724BAAD8D5A1291BCB4256E9C1808F04C98A892B99BB`) found
+  two common all-object deltas (`0xB0`, `0xB4`) but only one common active-only
+  delta (`0xB4`); the third delta differed (`0x16E` vs `0x166`) and its owner
+  marker differed (`0xFFFFFFFF` vs `0x1FFFFFFFF`). This is
+  `STATUS=CANDIDATE_RELATIVE_ID_PATTERN_NOT_QUALIFIED`, not a resolver or
+  identity qualification.
+- No code, wire layout, resolver, or authority model was changed. The next
+  required check is a controlled cross-PC same-save/same-area replay of this
+  relative-delta pattern. Gates unchanged: Stage 2 `BUILD_ONLY`, Stage 3
+  `PREP_ONLY`, full test closed, `GATE_C=CLOSED`, `READY_FOR_INSTALL=NO`, QA
+  `none`, no co-op claim, no ETA.
+
 ## Unknowns / not yet checked
 
 - Whether other players have the same Steam build id (16857613).
