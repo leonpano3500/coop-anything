@@ -2271,6 +2271,27 @@ QA `none`, no co-op claim, no ETA.
   passes **14/14** core selftests, including ObjectId spawn-key checks, and
   **7/7** item/story tests. No live writes or network occurred.
 
+## mpdev242-244 qualified enemy-HP write path (2026-11-27)
+
+- `tools\mpdev242-reversible-enemy-hp-write-test.py` (SHA-256
+  `A574CBA67CB0D280461AFA665D530FE235090FC55CFE0E974ED663B33E19DF15`)
+  performed the approved exact test. A stale initial address was rejected
+  safely; a fresh read-only scan resolved `GOCHealth 0x157680520` before any
+  write. `mpdev242-reversible-enemy-hp-write-test-20261127.txt` (SHA-256
+  `62093F452C0D3C6252023D39EE53C13DBA56203039AE5278B885193CFC7BE8AE`)
+  records `33 -> 32 -> 33`, with read-back at each step and the original HP
+  restored.
+- `mpdev244-enemy-hp-write-path-qualified-20261127.txt` (SHA-256
+  `D345D3177196876B35C83A5EC08B44AEEBB13E8B8DF9B32531B581243A13EC61`)
+  records `ENEMY_HP_WRITE_PATH=QUALIFIED`. This is the second qualified write
+  path after the ring counter. It does not qualify hooks, authority,
+  networking, or working co-op.
+- The fresh scan (`mpdev243b-gochealth-only-20261127.txt`, SHA-256
+  `F91ECA5AE480A9365A3F22116107CAED4A2AB101D42DFF16C71AD84481A65788`)
+  showed ObjectIds `0x12104` and `0x120D7`, matching the earlier session for
+  those components and supporting ObjectId persistence across restart for the
+  same save/area.
+
 ## Unknowns / not yet checked
 
 - Whether other players have the same Steam build id (16857613).
