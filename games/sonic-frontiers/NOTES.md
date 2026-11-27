@@ -2466,6 +2466,27 @@ QA `none`, no co-op claim, no ETA.
   `PREP_ONLY`, full test closed, `GATE_C=CLOSED`, `READY_FOR_INSTALL=NO`, QA
   `none`, no co-op claim, no ETA.
 
+## mpdev261 PC B relative-ID package prepared (2026-11-27)
+
+- `RESULTS\mpdev261-pcB-relative-id-package.zip` (SHA-256
+  `3ED083F210BF6C0903370F84F14208A4794296F5BC56F52B718AE86ED2E8080B`) was
+  prepared for a controlled PC B read-only trace in the SAME SAVE and SAME AREA
+  as PC A. It contains the pinned `mpdev-keyfield-scan.exe` (SHA-256
+  `0934F47D79AA7CAB95E59873B3146F3EBF75911F4E9DAAA4C718ED8B9F6D2BFE`), a
+  runner (SHA-256
+  `0564D87D0207D3F98AB1976ED482CC83FD94618D7F1DA8F5308B92D7298EB15F`), and
+  instructions (SHA-256
+  `0B7544EFD279A77FB83C4CD0D2D0E25600007D009297AA4177666AE80AA24263`).
+- Filters: `StageInfo`, `GameModeStage`, `EnemySquad`, `EnemyJellyman`,
+  `GOCEnemy`, `GOCHealth`. It only reads process memory with
+  `VM_READ | QUERY_INFORMATION`; it does not write, hook, inject, install,
+  launch, contact friends, simulate input, or change game state.
+- The package was prepared only. It has not been sent, run, or used to contact
+  anyone. This check still needs owner action on PC B or fresh exact approval
+  before any friend contact. Gates unchanged: Stage 2 `BUILD_ONLY`, Stage 3
+  `PREP_ONLY`, full test closed, `GATE_C=CLOSED`, `READY_FOR_INSTALL=NO`, QA
+  `none`, no co-op claim, no ETA.
+
 ## Unknowns / not yet checked
 
 - Whether other players have the same Steam build id (16857613).
