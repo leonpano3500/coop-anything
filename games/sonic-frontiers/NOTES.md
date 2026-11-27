@@ -2215,6 +2215,25 @@ or input simulation occurred. Gates unchanged: Stage 2 `BUILD_ONLY`, Stage 3
 `PREP_ONLY`, full test closed, `GATE_C=CLOSED`, QA `none`, no co-op claim, no
 ETA.
 
+## mpdev238-239 first qualified reversible write path (2026-11-27)
+
+- `tools\mpdev238-reversible-ring-write-test.py` (SHA-256
+  `9DA9B36CE3E3973CF5790F82A26D2C6BF253A80D8B08EBED630DC42C25CF6896`)
+  executed the owner-approved exact scope: one u16 write to
+  `BlackboardItem+0x28`, read-back, owner HUD confirmation, then restore.
+- `mpdev238-reversible-ring-write-apply-20261127.txt` (SHA-256
+  `D3C27D2DF3DE4C4A1A560BD707B07C11C3E325CCB780AC0B583ED86C96480E13`)
+  changed `139 -> 140`; the owner confirmed the HUD read 140.
+  `mpdev238-reversible-ring-write-restore-20261127.txt` (SHA-256
+  `6AB167EF9C447AACEBEB7FEA32793A4520F2394C4FB4BFD3CB4AA69867A53686`)
+  restored `140 -> 139`.
+- `mpdev239-reversible-write-path-qualified-20261127.txt` (SHA-256
+  `62BAE32AB18F8269DEA503F06B97167460ADE9C3B699ACFBAD1043449B2174AB`)
+  records `REVERSIBLE_WRITE_PATH=QUALIFIED` for this field. This is the first
+  qualified write path in the project. It does not qualify enemy writes,
+  hooks, authority, networking, or working co-op; new write targets need their
+  own exact approval.
+
 ## Unknowns / not yet checked
 
 - Whether other players have the same Steam build id (16857613).
