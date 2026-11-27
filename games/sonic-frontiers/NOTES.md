@@ -2487,6 +2487,23 @@ QA `none`, no co-op claim, no ETA.
   `PREP_ONLY`, full test closed, `GATE_C=CLOSED`, `READY_FOR_INSTALL=NO`, QA
   `none`, no co-op claim, no ETA.
 
+## mpdev262 static StageData key survey (2026-11-27)
+
+- Added `tools\mpdev262-stage-data-compare.py` (SHA-256
+  `FE5F72807EAD1CC464FA191FD5A0419F1921AA0865B934525355BE8570AC70C8`). It is
+  an offline comparator of two `mpdev251` traces and makes no co-op claim.
+- `mpdev262-stage-data-comparison.txt` (SHA-256
+  `86B068AA74CABE6BC8F5C2D3CD1A711F60F61E2E86374D39B188CD138A3A8431`)
+  compared `StageData` records from the two local instances by `+0x0B8`. All 22
+  common keys matched on `+0x0B8`, `+0x0F0`, `+0x17C`, and `+0x19C`, with 0
+  mismatches and no A-only or B-only keys.
+- Representative stable keys include `0x100402`, `0x100408`, `0x100F00`,
+  `0x100F01`, `0x110402`, `0x140402`, `0x100421`, and `0x7C100403`. These are
+  `CANDIDATE_STATIC_STAGE_DATA_SURVEY_ONLY`; they do not map an enemy, qualify a
+  resolver, or change the wire layout.
+- Gates unchanged: Stage 2 `BUILD_ONLY`, Stage 3 `PREP_ONLY`, full test closed,
+  `GATE_C=CLOSED`, `READY_FOR_INSTALL=NO`, QA `none`, no co-op claim, no ETA.
+
 ## Unknowns / not yet checked
 
 - Whether other players have the same Steam build id (16857613).
