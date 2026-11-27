@@ -2256,6 +2256,21 @@ access, or input simulation occurred for this change. Gates unchanged:
 Stage 2 `BUILD_ONLY`, Stage 3 `PREP_ONLY`, full test closed, `GATE_C=CLOSED`,
 QA `none`, no co-op claim, no ETA.
 
+## mpdev241 ObjectId-aware spawn keys (2026-11-27)
+
+- `src\coop\mpdev_game_adapter.h` (SHA-256
+  `229139756567B8BE744B534DF79EBA245EC7DD48054934A22554245BB39857D6`) and
+  `mpdev_game_adapter.cpp` (SHA-256
+  `89F2DAA90C52BBBA6546C2B45647A6DD075310F2BA7A395B00F7FABFA166708E`)
+  now accept an optional 16-byte engine ObjectId. `SpawnKeyFor` uses both
+  qwords when present, otherwise preserves the existing
+  `(world,class,spawner,ordinal)` behavior. This is still
+  `CANDIDATE_ONLY` until cross-peer determinism is proven.
+- `build\mpdev2-cli.exe` (SHA-256
+  `C118032ECEAE4AE0E41A822179A35C8655B426F4305A3D7A043E61E9B3C365FD`)
+  passes **14/14** core selftests, including ObjectId spawn-key checks, and
+  **7/7** item/story tests. No live writes or network occurred.
+
 ## Unknowns / not yet checked
 
 - Whether other players have the same Steam build id (16857613).
