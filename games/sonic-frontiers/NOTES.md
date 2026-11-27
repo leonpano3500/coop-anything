@@ -2350,6 +2350,30 @@ QA `none`, no co-op claim, no ETA.
   Gates unchanged: Stage 2 `BUILD_ONLY`, Stage 3 `PREP_ONLY`, full test closed,
   `GATE_C=CLOSED`, `READY_FOR_INSTALL=NO`, QA `none`, no co-op claim, no ETA.
 
+## mpdev254 offline anchor-trace comparator (2026-11-27)
+
+- Added `tools\mpdev254-anchor-compare.py` (SHA-256
+  `6E81896EE2F48C1E692F22B18A58CBD1AD32ED4B0D569EB0C717963504755E1A`). It is
+  an offline file comparator: it never opens a game process, writes memory,
+  hooks, injects, installs, uses the network, or simulates input. It parses both
+  `mpdev251` compact output and the `mpdev045`-format raw keyfield scan used by
+  the PC B package.
+- Its output always includes `WORKING_CO_OP_CLAIM=NO` and
+  `IDENTITY_QUALIFICATION=NOT_CLAIMED_BY_THIS_TOOL`. A match only reports
+  candidate anchor equality; it does not qualify enemy identity, resolver,
+  authority, hooks, networking, or co-op.
+- `py -3 tools\mpdev254-anchor-compare.py --selftest` passed `4/4` checks:
+  same-PID detection, distinct-PID match detection, raw-trace parsing, and
+  mismatch detection.
+- `mpdev254-host-tools-anchor-crosscheck-20261127.txt` (SHA-256
+  `AA121D78649936031DEB74F41DCE84AA9B8BDE2D4D816A639B3488D5F1F30454`)
+  compared the two independent host read-only traces. All four candidate
+  anchors matched, but the status is `SAME_PID_CROSS_CHECK_ONLY` because both
+  inputs are PID `33736`. This is a tool-consistency check, not cross-peer
+  qualification.
+- Gates unchanged: Stage 2 `BUILD_ONLY`, Stage 3 `PREP_ONLY`, full test closed,
+  `GATE_C=CLOSED`, `READY_FOR_INSTALL=NO`, QA `none`, no co-op claim, no ETA.
+
 ## Unknowns / not yet checked
 
 - Whether other players have the same Steam build id (16857613).
